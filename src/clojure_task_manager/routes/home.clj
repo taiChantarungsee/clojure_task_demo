@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [liberator.core :refer [defresource resource request-method-in]]
             [noir.io :as io]
+            [noir.session :as session]
             [clojure.java.io :refer [file]]
             [cheshire.core :refer [generate-string]]))
 
@@ -37,6 +38,9 @@
 	:last-modified
 	(fn [{{{resource :resource} :route-params} :request}]
 		(.lastModified (file (str (io/resource-path) "/home.html")))))
+
+(defn home []
+	(layout/common [:h1 "Hello" (session/get :user)]))
 
 (defroutes home-routes
   (ANY "/" request home)

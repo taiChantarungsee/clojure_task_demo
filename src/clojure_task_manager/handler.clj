@@ -3,6 +3,7 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.file-info :refer [wrap-file-info]]
             [hiccup.middleware :refer [wrap-base-url]]
+            [clojure_task_manager.routes.auth :refer [auth-routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [noir.util.middleware :as noir-middleware]
@@ -19,7 +20,7 @@
   (route/not-found "Not Found"))
 
 (def app
-  (noir-middleware/app-handler [home-routes app-routes])
+  (noir-middleware/app-handler [auth-routes home-routes app-routes]))
 
   ;;(-> (routes home-routes app-routes)
   ;;    (handler/site)
