@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [liberator.core :refer [defresource resource request-method-in]]
             [noir.io :as io]
+            [clojure_task_manager.views.layout :as layout]
             [noir.session :as session]
             [clojure.java.io :refer [file]]
             [cheshire.core :refer [generate-string]]))

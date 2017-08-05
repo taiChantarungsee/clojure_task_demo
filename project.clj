@@ -8,12 +8,13 @@
 		             [lib-noir "0.9.9"]
 		             [liberator "0.15.1"]
 		             [cheshire "5.7.1"]
-		             [org.clojure/java.jdbc "0.7.3"]
+		             [org.clojure/java.jdbc "0.7.0"]
  	               [postgresql/postgresql "9.1-901.jdbc4"]]
   :plugins [[lein-ring "0.8.12"]]
   :ring {:handler clojure_task_manager.handler/app
          :init clojure_task_manager.handler/init
          :destroy clojure_task_manager.handler/destroy}
+  :repl-options {:init-ns clojure_task_manager.models.db}
   :profiles
   {:uberjar {:aot :all}
    :production
