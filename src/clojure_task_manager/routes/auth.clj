@@ -42,15 +42,21 @@
 		"An error has occured while processing the request"))
 
 (defn handle-registration [id pass pass1]
-		;;(if (valid? id pass pass1)
-		(try
-		  (db/create-user {:id id :pass (crypt/encrypt pass)})
-		  (session/put! :user id)
-		  (resp/redirect "/")
-		  (catch Exception ex
-		  	(vali/rule false [:id (format-error id ex)])
-		  	(registration-page)))
-		(registration-page id))
+;;(if (valid? id pass pass1)
+    (try
+      (db/create-user {:id id :pass (crypt/encrypt pass)})
+      (session/put! :user id)
+      (create-gallery-path)
+      (resp/redirect "/")
+      (catch Exception ex
+        (vali/rule false [:id (format-error id ex)])
+        (registration-page)))
+    (registration-page id)))
+
+(defn create-gallery-path []
+  (let [user-path (File. (gallery-path))]
+    (if-not (.exists user-path) (.mkdirs user-path))
+    (str (.getAbsolutePath user-path) File/separator)))
 
 (defroutes auth-routes
 	(GET "/register" []
