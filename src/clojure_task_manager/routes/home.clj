@@ -40,7 +40,7 @@
 	(fn [{{{resource :resource} :route-params} :request}]
 		(.lastModified (file (str (io/resource-path) "/home.html")))))
 
-(defn home []
+(defn home [& args]
 	(layout/common [:h1 "Hello" (session/get :user)]))
 
 (defroutes home-routes

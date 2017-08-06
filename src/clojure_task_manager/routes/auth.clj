@@ -3,9 +3,14 @@
 			  [compojure.core :refer :all]
 			  [clojure_task_manager.routes.home :refer :all]
 			  [clojure_task_manager.views.layout :as layout]
+			  [clojure_task_manager.models.db :as db]
 			  [noir.session :as session]
 			  [noir.response :as resp]
-			  [noir.validation :as vali]))
+			  [noir.validation :as vali]
+			  [noir.util.crypt :as crypt]))
+
+(defn error-item [[error]]
+	[:div.error error])
 
 (defn control [id label field]
 	(list
@@ -14,7 +19,7 @@
 		[:br]))
 
 (defn registration-page [& [id]]
- (layout/common
+ (layout/base
   (form-to [:post "/register"]
 		   (control :id
 					(label "user-id" "user id")
@@ -27,18 +32,38 @@
 					(password-field {:tabindex 3} "pass1"))
 			(submit-button {:tabindex 4} "create account"))))
 
+(defn format-error [id ex]
+	(cond
+		(and (instance? org.postgresql.util.PSQLException ex)
+		 (= 0 (.getErrorCode ex)))
+		(str "The user with id " id " already exists!")
+
+		:else
+		"An error has occured while processing the request"))
+
 (defn handle-registration [id pass pass1]
-	(if (valid? id pass pass1)
-		(do (session/put! :user id)
-		  (resp/redirect "/"))
-		(registration-page id)))
+		;;(if (valid? id pass pass1)
+		(try
+		  (db/create-user {:id id :pass (crypt/encrypt pass)})
+		  (session/put! :user id)
+		  (resp/redirect "/")
+		  (catch Exception ex
+		  	(vali/rule false [:id (format-error id ex)])
+		  	(registration-page)))
+		(registration-page id))
 
 (defroutes auth-routes
 	(GET "/register" []
 		(registration-page))
 
 	(POST "/register" [id pass pass1]
-		(handle-registration id pass pass1)))
+		(handle-registration id pass pass1))
+
+	(POST "/login" [id pass]
+		(handle-login id pass))
+
+	(GET "/logout" []
+		(handle-logout)))
 
 (defn valid? [id pass pass1]
 	(vali/rule (vali/has-value? id)
@@ -49,6 +74,13 @@
 		[:pass "entered passwords do not match"])
 	(not (vali/errors? :id :pass :pass1)))
 
-(defn error-item [[error]]
-	[:div.error error])
+(defn handle-login [id pass]
+ (let [user (db/get-user id)]
+  (if (and user (crypt/compare pass (:pass user)))
+   (session/put! :user id)))
+ 
+ (resp/redirect "/"))
 
+(defn handle-logout []
+ (session/clear!)
+ (resp/redirect "/"))

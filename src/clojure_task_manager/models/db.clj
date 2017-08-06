@@ -14,7 +14,12 @@
 		[:id "varchar(32) PRIMARY KEY"]
 		[:pass "varchar(100)"])))
 
+(defmacro with-db [f & body]
+	'(sql/with-connection ~db (~f ~@body)))
+
 (defn get-user [id]
-	(sql/with-connection db
-	(sql/with-query-results
-	res ["select * from users where id = ?" id] (first res))))
+	(with-db sql/with-query-results
+	 res ["select * from users where id = ?" id] (first res)))
+
+(defn create-user [user]
+	(with-db sql/insert-record :users user))
