@@ -2,6 +2,24 @@
   (:require [hiccup.page :refer [html5 include-css]]
             [hiccup.form :refer :all]))
 
+(defn make-menu [& items]
+[:div (for [item items] [:div.menuitem item])])
+
+(defn guest-menu []
+(make-menu
+(link-to "/" "home")
+(link-to "/register" "register")
+(form-to [:post "/login"]
+(text-field {:placeholder "screen name"} "id")
+(password-field {:placeholder "password"} "pass")
+(submit-button "login"))))
+
+(defn user-menu [user]
+(make-menu
+(link-to "/" "home")
+(link-to "/upload" "upload images")
+(link-to "/logout" (str "logout " user))))
+
 (defn common [& body]
   (html5
     [:head
@@ -12,15 +30,18 @@
 (defn common [& content]
 	(base
 		(if-let [user (session/get :user)]
-			[:p user] (link-to "/register" "register"))
-		content))
+      (user-menu user)
+      (guest-menu))
+		[:div.content content]))
 
 (defn common [& content]
- (base
-  (if-let [user (session/get :user)]
-   [:div (link-to "/logout" (str "logout " user))]
-   [:div (link-to "/register" "register")
-    (form-to [:post "/login"]
+  (base
+    (if-let [user (session/get :user)]
+      (list
+    [:div (link-to "/upload" "upload images")]
+    [:div (link-to "/logout" (str "logout " user))])
+    [:div (link-to "/register" "register")
+      (form-to [:post "/login"]
       (text-field {:placeholder "screen name"} "id")
       (password-field {:placeholder "password"} "pass")
       (submit-button "login"))])
