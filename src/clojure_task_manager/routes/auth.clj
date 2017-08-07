@@ -4,6 +4,7 @@
 			  [clojure_task_manager.routes.home :refer :all]
 			  [clojure_task_manager.views.layout :as layout]
 			  [clojure_task_manager.models.db :as db]
+			  [clojure_task_manager.util :refer [gallery-path]]
 			  [noir.session :as session]
 			  [noir.response :as resp]
 			  [noir.validation :as vali]
@@ -41,6 +42,11 @@
 		:else
 		"An error has occured while processing the request"))
 
+(defn create-gallery-path []
+  (let [user-path (File. (gallery-path))]
+    (if-not (.exists user-path) (.mkdirs user-path))
+    (str (.getAbsolutePath user-path) File/separator)))
+
 (defn handle-registration [id pass pass1]
 ;;(if (valid? id pass pass1)
     (try
@@ -52,11 +58,6 @@
         (vali/rule false [:id (format-error id ex)])
         (registration-page)))
     (registration-page id)))
-
-(defn create-gallery-path []
-  (let [user-path (File. (gallery-path))]
-    (if-not (.exists user-path) (.mkdirs user-path))
-    (str (.getAbsolutePath user-path) File/separator)))
 
 (defroutes auth-routes
 	(GET "/register" []

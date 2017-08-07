@@ -4,11 +4,12 @@
             [ring.middleware.file-info :refer [wrap-file-info]]
             [hiccup.middleware :refer [wrap-base-url]]
             [clojure_task_manager.routes.auth :refer [auth-routes]]
+            [clojure_task_manager.routes.gallery :refer [gallery-routes]]
+            [clojure_task_manager.routes.home :refer [home-routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [noir.util.middleware :as noir-middleware]
-            [noir.session :as session]
-            [clojure_task_manager.routes.home :refer [home-routes]]))
+            [noir.session :as session]))
 
 (defn init []
   (println "clojure_task_manager is starting"))
@@ -25,7 +26,8 @@
   (route/not-found "Not Found"))
 
 (def app
-  (noir-middleware/app-handler [auth-routes home-routes upload-routes app-routes]
+  (noir-middleware/app-handler [auth-routes home-routes upload-routes gallery-routes
+    app-routes]
     :access-rules [user-page]))
 
   ;;(-> (routes home-routes app-routes)
