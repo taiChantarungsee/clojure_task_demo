@@ -6,6 +6,7 @@
             [clojure_task_manager.routes.auth :refer [auth-routes]]
             [clojure_task_manager.routes.gallery :refer [gallery-routes]]
             [clojure_task_manager.routes.home :refer [home-routes]]
+            [clojure_task_manager.routes.upload :refer [upload-routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [noir.util.middleware :as noir-middleware]

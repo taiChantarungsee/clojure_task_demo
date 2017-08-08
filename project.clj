@@ -8,7 +8,7 @@
 		             [lib-noir "0.9.9"]
 		             [liberator "0.15.1"]
 		             [cheshire "5.7.1"]
-		             [org.clojure/java.jdbc "0.7.0"]
+		             [org.clojure/java.jdbc "0.2.3"]
  	               [postgresql/postgresql "9.1-901.jdbc4"]]
   :plugins [[lein-ring "0.8.12"]]
   :ring {:handler clojure_task_manager.handler/app

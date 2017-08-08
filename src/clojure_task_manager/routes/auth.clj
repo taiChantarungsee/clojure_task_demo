@@ -8,7 +8,8 @@
 			  [noir.session :as session]
 			  [noir.response :as resp]
 			  [noir.validation :as vali]
-			  [noir.util.crypt :as crypt]))
+			  [noir.util.crypt :as crypt])
+	(:import java.io.File))
 
 (defn error-item [[error]]
 	[:div.error error])
@@ -57,20 +58,7 @@
       (catch Exception ex
         (vali/rule false [:id (format-error id ex)])
         (registration-page)))
-    (registration-page id)))
-
-(defroutes auth-routes
-	(GET "/register" []
-		(registration-page))
-
-	(POST "/register" [id pass pass1]
-		(handle-registration id pass pass1))
-
-	(POST "/login" [id pass]
-		(handle-login id pass))
-
-	(GET "/logout" []
-		(handle-logout)))
+    (registration-page id))
 
 (defn valid? [id pass pass1]
 	(vali/rule (vali/has-value? id)
@@ -91,3 +79,16 @@
 (defn handle-logout []
  (session/clear!)
  (resp/redirect "/"))
+
+(defroutes auth-routes
+	(GET "/register" []
+		(registration-page))
+
+	(POST "/register" [id pass pass1]
+		(handle-registration id pass pass1))
+
+	(POST "/login" [id pass]
+		(handle-login id pass))
+
+	(GET "/logout" []
+		(handle-logout)))

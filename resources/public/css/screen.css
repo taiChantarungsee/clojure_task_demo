@@ -14,6 +14,30 @@ label {
 	float:left;
 }
 
+.menuitem {
+	float: left;
+	margin-right: 10px;
+}
+
+.content {
+	clear: both;
+	padding: 20px;
+}
+
+.thumbnail {
+	float:left;
+	padding: 5px;
+	margin: 8px;
+	border-style:solid;
+	border-width:1px;
+	border-color:#ccc;
+	box-shadow:
+	4px 4px 6px -1px #222;
+	-moz-box-shadow:
+	4px 4px 6px -1px #222;
+	-webkit-box-shadow: 4px 4px 6px -1px #222;
+}
+
 .error {
 	color: red;
 }
