@@ -2,7 +2,8 @@
   (:require [hiccup.page :refer [html5 include-css]]
             [hiccup.form :refer :all]
             [hiccup.element :refer [link-to]]
-            [noir.session :as session]))
+            [noir.session :as session])
+  (:use ring.util.anti-forgery))
 
 (defn make-menu [& items]
 [:div (for [item items] [:div.menuitem item])])
@@ -14,6 +15,7 @@
     (form-to [:post "/login"]
       (text-field {:placeholder "screen name"} "id")
       (password-field {:placeholder "password"} "pass")
+      (anti-forgery-field)
       (submit-button "login"))))
 
 (defn user-menu [user]

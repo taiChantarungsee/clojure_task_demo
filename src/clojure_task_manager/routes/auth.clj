@@ -9,7 +9,8 @@
 			  [noir.response :as resp]
 			  [noir.validation :as vali]
 			  [noir.util.crypt :as crypt])
-	(:import java.io.File))
+	(:import java.io.File)
+	(:use ring.util.anti-forgery))
 
 (defn error-item [[error]]
 	[:div.error error])
@@ -32,6 +33,7 @@
 			(control :pass1
 					(label "pass1" "retype password")
 					(password-field {:tabindex 3} "pass1"))
+			(anti-forgery-field)
 			(submit-button {:tabindex 4} "create account"))))
 
 (defn format-error [id ex]
