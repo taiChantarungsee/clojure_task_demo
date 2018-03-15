@@ -1,7 +1,5 @@
 # clojure_task_manager
 
-FIXME
-
 ## Prerequisites
 
 You will need [Leiningen][1] 1.7.0 or above installed.
